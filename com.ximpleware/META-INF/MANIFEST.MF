@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VTD-XML
+Bundle-SymbolicName: com.ximpleware
+Bundle-Version: 1.0.0
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: com.ximpleware,
+ com.ximpleware.extended,
+ com.ximpleware.extended.parser,
+ com.ximpleware.extended.xpath,
+ com.ximpleware.parser,
+ com.ximpleware.transcode,
+ com.ximpleware.xpath,
+ java_cup,
+ java_cup.runtime

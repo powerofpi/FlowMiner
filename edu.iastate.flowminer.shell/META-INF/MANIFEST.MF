@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Shell
+Bundle-SymbolicName: edu.iastate.flowminer.shell
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.scala-lang.scala-library,
+ com.ensoftcorp.abp;bundle-version="2.1.8",
+ com.ensoftcorp.atlas.core;bundle-version="2.1.8",
+ com.ensoftcorp.atlas.java.core;bundle-version="2.1.8",
+ com.ensoftcorp.atlas.ui.shell;bundle-version="2.1.8",
+ edu.iastate.flowminer;bundle-version="0.0.1",
+ edu.iastate.flowminer.io;bundle-version="0.0.1",
+ org.eclipse.ui;bundle-version="3.106.1",
+ org.eclipse.core.runtime;bundle-version="3.10.0";visibility:=reexport,
+ org.eclipse.jdt.launching;bundle-version="3.7.102"

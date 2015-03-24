@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="FlowMiner"
+            visible="true"
+            id="FlowMiner.actionSet">
+         <menu
+               label="FlowMiner"
+               id="flowMinerMenu">
+            <separator
+                  name="flowMinerGroup">
+            </separator>
+         </menu>
+         
+         <action
+               label="&amp;Import into empty index"
+               class="edu.iastate.flowminer.actions.ImportIntoEmpty"
+               tooltip="Import library data flow summaries (for Atlas) into a new, empty index"
+               menubarPath="flowMinerMenu/flowMinerGroup"
+               id="edu.iastate.flowminer.actions.ImportIntoEmpty">
+         </action>
+         
+         <action
+               label="&amp;Import into existing index"
+               class="edu.iastate.flowminer.actions.ImportIntoExisting"
+               tooltip="Import library data flow summaries (for Atlas) into the existing index"
+               menubarPath="flowMinerMenu/flowMinerGroup"
+               id="edu.iastate.flowminer.actions.ImportIntoExisting">
+         </action>
+         
+         <action
+               label="&amp;Mine and Export"
+               class="edu.iastate.flowminer.actions.MineAndExport"
+               tooltip="Mine library data flow summaries and export to portable format"
+               menubarPath="flowMinerMenu/flowMinerGroup"
+               id="edu.iastate.flowminer.actions.MineAndExport">
+         </action>
+      </actionSet>
+   </extension>
+
+</plugin>

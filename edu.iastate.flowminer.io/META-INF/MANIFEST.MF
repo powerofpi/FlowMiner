@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Io
+Bundle-SymbolicName: edu.iastate.flowminer.io
+Bundle-Version: 0.0.1.qualifier
+Bundle-Activator: edu.iastate.flowminer.io.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ com.ximpleware;bundle-version="0.0.1";visibility:=reexport,
+ net.ontopia.utils;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Export-Package: edu.iastate.flowminer.io,
+ edu.iastate.flowminer.io.common,
+ edu.iastate.flowminer.io.log,
+ edu.iastate.flowminer.io.model

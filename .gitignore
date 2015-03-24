@@ -1,0 +1,47 @@
+# Binary files
+*.class
+logs.zip
+
+# Entire directories to ignore
+bin/
+gen/
+tmp/
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+#Backup, swap, MacOS dir file, etc.
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+*.cache
+Thumbs.db
+
+# Eclipse-specific
+local.properties
+*.launch
+*.pydevproject
+*.metadata
+*.tmp
+*.bak
+*.swp
+*~.nib
+*.loadpath
+*.cache
+
+# Stuff not to ignore.
+!com.ximpleware/**/*.class
+!net.ontopia.utils/**/*.class
+!com.opencsv/**/*.class
+!**/lib/*.jar
+!**/test_resources/*.jar

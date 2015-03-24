@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+        targetNamespace="http://edu.iastate.flowminer.io"
+        xmlns:tns="http://edu.iastate.flowminer.io"
+        elementFormDefault="qualified">
+
+    <complexType name="Element">
+    	<sequence>
+            <element name="c" type="string" maxOccurs="1" minOccurs="1">
+    		</element>
+            <element name="d" type="string" maxOccurs="1" minOccurs="1"></element>
+            <element name="f" type="string" maxOccurs="unbounded"
+    			minOccurs="0">
+    		</element>
+    		<element name="e" type="tns:Attribute"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="TypeElement" abstract="true">
+    	<complexContent>
+    		<extension base="tns:Element"></extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="VarElement" abstract="true">
+    	<complexContent>
+    		<extension base="tns:Element">
+    			<sequence>
+                    <element name="ao" type="string" maxOccurs="1" minOccurs="1">
+    				</element>
+                    <element name="an" type="string" maxOccurs="1"
+    					minOccurs="0">
+    				</element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="ParamVarElement">
+    	<complexContent>
+    		<extension base="tns:VarElement">
+    			<sequence>
+    				<element name="ap" type="string" maxOccurs="1" minOccurs="1"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="ReturnVarElement">
+    	<complexContent>
+    		<extension base="tns:VarElement"></extension>
+    	</complexContent>
+    </complexType>
+
+
+    <complexType name="FieldVarElement">
+    	<complexContent>
+    		<extension base="tns:VarElement"></extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="EnumConstantElement">
+    	<complexContent>
+    		<extension base="tns:VarElement">
+
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="MethodElement">
+    	<complexContent>
+    		<extension base="tns:Element">
+    			<sequence>
+                    <element name="ae" type="tns:ParamVarElement" maxOccurs="unbounded" minOccurs="0">
+    				</element>
+                    <element name="ag" type="string" maxOccurs="unbounded" minOccurs="0">
+    				</element>
+                    <element name="af" type="tns:ReturnVarElement" maxOccurs="1" minOccurs="0">
+    				</element>
+                    <element name="am" type="tns:ContextThisVarElement" maxOccurs="1" minOccurs="0">
+    				</element>
+    				<element name="ah"
+    					type="tns:ClassTypeElement" maxOccurs="unbounded"
+    					minOccurs="0">
+    				</element>
+    				<element name="ai"
+    					type="tns:InterfaceTypeElement" maxOccurs="unbounded"
+    					minOccurs="0">
+    				</element>
+    				<element name="aj"
+    					type="tns:EnumTypeElement" maxOccurs="unbounded"
+    					minOccurs="0">
+    				</element>
+    				<element name="ak"
+    					type="tns:AnnotationTypeElement" maxOccurs="unbounded"
+    					minOccurs="0">
+    				</element>
+    				<element name="al" type="tns:LocalVarElement" maxOccurs="unbounded" minOccurs="0"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="PackageElement">
+    	<complexContent>
+    		<extension base="tns:Element">
+    			<sequence>
+    				<element name="q" type="tns:ClassTypeElement" maxOccurs="unbounded" minOccurs="0"></element>
+    				<element name="r" type="tns:InterfaceTypeElement" maxOccurs="unbounded" minOccurs="0"></element>
+    				<element name="s" type="tns:EnumTypeElement" maxOccurs="unbounded" minOccurs="0"></element>
+    				<element name="t" type="tns:AnnotationTypeElement" maxOccurs="unbounded" minOccurs="0"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="Relationship">
+    	<complexContent>
+    		<extension base="tns:Element">
+    			<sequence>
+    				<element name="n" type="long" maxOccurs="1"
+    					minOccurs="1">
+    				</element>
+    				<element name="o" type="long" maxOccurs="1"
+    					minOccurs="1">
+    				</element>
+    				<element name="p" type="string" maxOccurs="1" minOccurs="1"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="IOModel">
+    	<sequence>
+    		<element name="k" type="string" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="l" type="dateTime" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="m" type="string" maxOccurs="1" minOccurs="0"></element>
+    		<element name="j" type="tns:PrimitiveTypeElement"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    		<element name="h" type="tns:LibraryElement"
+    			maxOccurs="unbounded" minOccurs="1">
+    		</element>
+    		<element name="i" type="tns:Relationship"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    	</sequence>
+    </complexType>
+    
+    <element name="h" type="tns:IOModel"></element>
+
+    <complexType name="ConstructorElement">
+    	<complexContent>
+    		<extension base="tns:MethodElement"></extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="Attribute">
+    	<sequence>
+    		<element name="a" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="b" type="string" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="ContextThisVarElement">
+    	<complexContent>
+    		<extension base="tns:Element"></extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="LocalVarElement">
+    	<complexContent>
+    		<extension base="tns:VarElement">
+    			<sequence>
+    				<element name="aq" type="string" maxOccurs="1" minOccurs="1"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="ThisVarElement">
+    	<complexContent>
+    		<extension base="tns:VarElement"></extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="EnumTypeElement">
+    	<complexContent>
+    		<extension base="tns:NonPrimitiveTypeElement">
+    			<sequence>
+    				<element name="ad" type="tns:EnumConstantElement" maxOccurs="unbounded" minOccurs="0"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="PrimitiveTypeElement">
+    	<complexContent>
+    		<extension base="tns:TypeElement"></extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="InterfaceTypeElement">
+    	<complexContent>
+    		<extension base="tns:NonPrimitiveTypeElement"></extension>
+    	</complexContent>
+    </complexType>
+    
+    <complexType name="ClassTypeElement">
+    	<complexContent>
+    		<extension base="tns:NonPrimitiveTypeElement"></extension>
+    	</complexContent>
+    </complexType>
+    
+    <complexType name="AnnotationTypeElement">
+    	<complexContent>
+    		<extension base="tns:NonPrimitiveTypeElement"></extension>
+    	</complexContent>
+    </complexType>
+    
+
+    <complexType name="NonPrimitiveTypeElement" abstract="true">
+    	<complexContent>
+    		<extension base="tns:TypeElement">
+    			<sequence>
+                    <element name="ab" type="string" maxOccurs="1" minOccurs="0">
+    				</element>
+                    <element name="ac" type="string" maxOccurs="unbounded" minOccurs="0">
+    				</element>
+                    <element name="aa" type="tns:ConstructorElement" maxOccurs="unbounded" minOccurs="0">
+    				</element>
+                    <element name="v" type="tns:MethodElement"
+    					maxOccurs="unbounded" minOccurs="0">
+    				</element>
+    				<element name="u" type="tns:FieldVarElement"
+    					maxOccurs="unbounded" minOccurs="0">
+    				</element>
+    				<element name="w"
+    					type="tns:ClassTypeElement" maxOccurs="unbounded"
+    					minOccurs="0">
+    				</element>
+                    <element name="x" type="tns:InterfaceTypeElement" maxOccurs="unbounded" minOccurs="0">
+    				</element>
+                    <element name="y"
+    					type="tns:EnumTypeElement" maxOccurs="unbounded"
+    					minOccurs="0">
+    				</element>
+    				<element name="z" type="tns:AnnotationTypeElement" maxOccurs="unbounded" minOccurs="0"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+
+    <complexType name="LibraryElement">
+    	<complexContent>
+    		<extension base="tns:Element">
+    			<sequence>
+    				<element name="ar" type="tns:PackageElement" maxOccurs="unbounded" minOccurs="0"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+</schema>
