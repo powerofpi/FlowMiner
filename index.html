@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>FlowMiner</title>
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>FlowMiner</h1>
+          <h2>Fine-grained, compact flow summaries for program analysis</h2>
+          <br />
+          <center>
+            <b><a href="./index.html">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./install.html">Install</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./tutorials.html">Tutorials</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./support.html">Support</a></b>
+          </center>
+        </header>
+        <hr>
+
+        <section id="main_content">
+
+        <h3><a name="Overview" class="anchor" href="#Overview"><span class="octicon octicon-link"></span></a>Overview</h3>
+        <p>FlowMiner is a program analysis plugin for <a href=http://www.eclipse.org/>Eclipse</a> that produces fine-grained, compact data flow summaries of a Java library. Unlike other library summary techniques which have coarse and lossy outputs, FlowMiner produces summaries that are expressive-enough to be used with context, object, field, type, and flow-sensitivity. We achieve this using a graph-based software analysis paradigm.  
+        </p>
+		
+		<img src="images/elide.png" alt="Elided Data Flow Graph">
+		
+        <h3><a name="Features" class="anchor" href="#Features"><span class="octicon octicon-link"></span></a>Features</h3>
+        
+        <ul>
+          <li>Summarizes arbitrary Java library bytecode (JARs)!
+          <ul><li><b>Inputs:</b> Java library JAR(s) to summarize, dependency JAR(s) (if any)</ul>
+          <ul><li><b>Outputs:</b> Summary data flow graph as compressed, portable XML</ul>
+          <li>Fine-grained summaries for existing program analysis tools to improve results
+          <li>IO plugin available (so existing tools don't have to implement XML parsers)
+          <li>Automatic summary import for tools based on <a href=http://www.ensoftcorp.com/atlas/>Atlas</a> analysis platform
+		  <li>Extremely easy to use (Eclipse plugin with user interface)
+		  
+		</ul>
+		<br>
+        <h3><a name="GettingStarted" class="anchor" href="#GettingStarted"><span class="octicon octicon-link"></span></a>Getting Started</h3>
+        <p>Ready to get started?</p>
+        <ol>
+          <li>First <a href="./install.html">install</a> FlowMiner</li>
+          <li>Then check out the <a href="./tutorials.html">tutorials</a></li>
+        </ol>
+        
+        <br>
+        <h3><a name="SourceCode" class="anchor" href="#SourceCode"><span class="octicon octicon-link"></span></a>Source Code</h3>
+        <a href="https://github.com/powerofpi/FlowMiner" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        <br />
+        <br />
+        
+        <footer>
+          Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+      </div>
+    </div>
+  </body>
+</html>

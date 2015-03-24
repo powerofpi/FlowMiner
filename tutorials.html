@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>FlowMiner - Tutorials</title>
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+        <header>
+          <h1>FlowMiner</h1>
+          <h2>Fine-grained, compact flow summaries for program analysis</h2>
+          <br />
+          <center>
+            <b><a href="./index.html">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./install.html">Install</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./tutorials.html">Tutorials</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./support.html">Support</a></b>
+          </center>
+        </header>
+        
+        <section id="main_content">
+        <p>If you have not yet <a href="./install.html">installed</a> the FlowMiner Eclipse plugin, do that first.</p>
+        <h3><a name="MiningSummaries" class="anchor" href="MiningSummaries"><span class="octicon octicon-link"></span></a>Mining Summaries</h3>
+        <p>So, you have one or more Java JARs that you want FlowMiner to summarize. Easy!</p>
+        <ol>
+          <li>From the <code>FlowMiner</code> dropdown menu, select <code>Mine and Export</code>.</li>
+          <li>Use the dialog to select the JAR(s) you want to summarize and click <code>OK</code>.</li>
+          <li>Use the dialog to select dependency JAR(s) of the libraries you are analyzing. If none, click <code>Cancel</code>. Otherwise select them and click <code>OK</code>.</li>
+          <li>Use the dialog to select the destination (output file) for the summaries and click <code>OK</code>.</li>
+        </ol>
+        Yes, it <i>is</i> that easy! FlowMiner will automatically mine and export summaries. You can track progress or cancel the job using the Eclipse <code>Progress</code> view, and see messages from FlowMiner in the Eclipse <code>Error Log</code> view.
+        
+        <br><br>
+        <h3><a name="ImportingSummaries" class="anchor" href="ImportingSummaries"><span class="octicon octicon-link"></span></a>Importing Summaries</h3>
+        <p>So, you have previously-mined summaries that you want to apply to an <a href=http://www.ensoftcorp.com/atlas/>Atlas</a> index so they can be used or inspected. Easy!</p> 
+        <ol>
+          <li>From the <code>FlowMiner</code> dropdown menu, select either <code>Import into existing index</code> or <code>Import into empty index</code>.
+          <li>Use the dialog to select the previously saved summary file and click <code>OK</code>.
+        </ol>
+        FlowMiner will automatically import the given summaries and insert them into your <a href=http://www.ensoftcorp.com/atlas/>Atlas</a> index.
+        
+        <footer>
+          Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

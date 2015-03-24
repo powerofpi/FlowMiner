@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/edu.iastate.flowminer_0.0.1.201504231320.jar" id="edu.iastate.flowminer" version="0.0.1.201504231320">
+      <category name="edu.iastate"/>
+   </feature>
+   <feature url="features/com.opencsv.feature_1.0.0.jar" id="com.opencsv.feature" version="1.0.0">
+      <category name="edu.iastate.dependency"/>
+   </feature>
+   <feature url="features/com.ximpleware.feature_1.0.0.jar" id="com.ximpleware.feature" version="1.0.0">
+      <category name="edu.iastate.dependency"/>
+   </feature>
+   <feature url="features/net.ontopia.utils.feature_1.0.0.jar" id="net.ontopia.utils.feature" version="1.0.0">
+      <category name="edu.iastate.dependency"/>
+   </feature>
+   <category-def name="edu.iastate" label="ISU &amp; EnSoft Research"/>
+   <category-def name="edu.iastate.dependency" label="ISU &amp; EnSoft Research Dependencies"/>
+</site>
