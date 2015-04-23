@@ -38,6 +38,14 @@
                menubarPath="flowMinerMenu/flowMinerGroup"
                id="edu.iastate.flowminer.actions.MineAndExport">
          </action>
+          
+         <action
+               label="&amp;Run Experiment"
+               class="edu.iastate.flowminer.actions.Experiment"
+               tooltip="Gather experimental data"
+               menubarPath="flowMinerMenu/flowMinerGroup"
+               id="edu.iastate.flowminer.actions.Experiment">
+         </action>
       </actionSet>
    </extension>
 
