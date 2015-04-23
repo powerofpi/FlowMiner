@@ -48,6 +48,19 @@
         </ol>
         FlowMiner will automatically import the given summaries and insert them into your <a href=http://www.ensoftcorp.com/atlas/>Atlas</a> index.
         
+        <br><br>
+        <h3><a name="UsingSummariesFromAnotherTool" class="anchor" href="UsingSummariesFromAnotherTool"><span class="octicon octicon-link"></span></a>Using FlowMiner Summaries With Another Tool</h3>
+        <p>If you want to use FlowMiner's library summaries from a tool other than <a href=http://www.ensoftcorp.com/atlas/>Atlas</a>, do the following:</p> 
+        <ol>
+          <li>Add edu.iastate.flowminer.io as a dependency and use the <a href=https://github.com/powerofpi/FlowMiner/blob/master/edu.iastate.flowminer.io/src/edu/iastate/flowminer/io/ModelAPI.java>Model API</a> to obtain an in-memory document model that can be traversed.</li>
+          OR
+          <li>Add edu.iastate.flowminer.io as a dependency and use the <a href=https://github.com/powerofpi/FlowMiner/blob/master/edu.iastate.flowminer.io/src/edu/iastate/flowminer/io/StreamAPI.java>Stream API</a> by implementing a custom StreamImporter.</li>
+          OR
+          <li>Implement your own parsing for FlowMiner's <a href=https://github.com/powerofpi/FlowMiner/blob/master/edu.iastate.flowminer.io/xml/edu.iastate.flowminer.io.xsd>XML Schema</a>.</li>
+        </ol>
+        
+        <p>Using any of the above methods, import the summaries in whatever form makes sense for your tool. The XML schema provides constructs that are roughly analogous to types in <a href=http://ensoftatlas.com/wiki/Extensible_Common_Software_Graph>XCSG</a> plus a schema extension whose additional tags and attributes are documented in <a href=https://github.com/powerofpi/FlowMiner/blob/master/edu.iastate.flowminer/src/edu/iastate/flowminer/schema/ISUSchema.java>ISUSchema</a>.
+        
         <footer>
           Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
         </footer>
