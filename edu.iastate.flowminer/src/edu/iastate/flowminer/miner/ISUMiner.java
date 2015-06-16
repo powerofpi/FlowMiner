@@ -561,7 +561,10 @@ public class ISUMiner extends Miner{
 				LinkedList<SummaryEdge> toAdd = new LinkedList<SummaryEdge>();
 				
 				if(dfiThis != null){
-					if(dThis == null) throw new FlowMinerException("Unable to find signature this for:\n" + dMethod);
+					if(dThis == null) {
+						Log.warning("Missing dependencies", new FlowMinerException("Unable to find signature 'this' (the identity parameter) for:\n" + dMethod));
+						return;
+					}
 					if(isSingleton){
 						toAdd.add(new SummaryEdge(dfiThis, dThis, ISUSchema.Edge.FLOW_METHOD_RESOLVED, ISUSchema.EDGE_FLOW_METHOD_RESOLVED_TAGS));
 					} else{

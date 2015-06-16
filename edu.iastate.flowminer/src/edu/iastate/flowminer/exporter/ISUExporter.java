@@ -4,6 +4,7 @@ import static com.ensoftcorp.atlas.core.script.Common.resolve;
 import static com.ensoftcorp.atlas.core.script.Common.universe;
 
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
@@ -91,6 +92,9 @@ public class ISUExporter extends Exporter{
 		if(mon.isCanceled()) return;
 		AtlasSet<GraphElement> exportSet = nodesToExport.taggedWithAny(ISUSchema.Node.LOCAL);
 		SubMonitor sm = SubMonitor.convert(mon, (int) exportSet.size());
+		
+		TreeSet<String> missingTypes = new TreeSet<String>();
+		
 		try{
 			for(GraphElement ge : exportSet){
 				if(mon.isCanceled()) return;
@@ -119,9 +123,19 @@ public class ISUExporter extends Exporter{
 					type = elementTypeContext.edges(type, NodeDirection.OUT).getFirst().getNode(EdgeDirection.TO);
 				}
 				
-				if(type != voidType) e.setType(exported.get(type).getId());
+				if(type != voidType) {
+					Element element = exported.get(type);
+					if (element == null) {
+						missingTypes.add(type.toString());
+					} else {
+						e.setType(element.getId());
+					}
+				}
 				sm.worked(1);
 			}
+			
+			if (!missingTypes.isEmpty())
+				Log.warning("Missing dependencies, reference to types which were not exported:\n" + missingTypes.toString());
 		}finally{
 			sm.done();
 		}
