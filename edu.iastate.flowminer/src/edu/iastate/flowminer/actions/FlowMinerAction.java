@@ -30,7 +30,7 @@ public abstract class FlowMinerAction implements IWorkbenchWindowActionDelegate{
 	}
 	
 	String chooseFile(String message, String typeDescription, String typeExtension){
-	    FileDialog dialog = new FileDialog(window.getShell(), SWT.OPEN);
+	    FileDialog dialog = new FileDialog(window.getShell(), SWT.SAVE);
 	    dialog.setText(message);
 	    dialog.setFilterNames(new String[] { typeDescription, "All Files (*.*)" });
 	    dialog.setFilterExtensions(new String[] { "*"+typeExtension, "*.*" });
@@ -44,7 +44,7 @@ public abstract class FlowMinerAction implements IWorkbenchWindowActionDelegate{
 	}
 	
 	String chooseSummaryFile(String message){
-		return chooseFile(message, "FlowMiner Summaries", ".xml.gz");
+		return chooseFile(message, "FlowMiner Summaries", ".xml-gz");
 	}
 	
 	public void selectionChanged(IAction action, ISelection selection) {}
