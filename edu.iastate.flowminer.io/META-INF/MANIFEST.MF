@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Io
 Bundle-SymbolicName: edu.iastate.flowminer.io
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 0.0.2.qualifier
 Bundle-Activator: edu.iastate.flowminer.io.Activator
 Require-Bundle: org.eclipse.core.runtime,
  com.ximpleware;bundle-version="0.0.1";visibility:=reexport,
