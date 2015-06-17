@@ -3,8 +3,11 @@ package edu.iastate.flowminer.exporter;
 import static com.ensoftcorp.atlas.core.script.Common.resolve;
 import static com.ensoftcorp.atlas.core.script.Common.universe;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
@@ -93,7 +96,7 @@ public class ISUExporter extends Exporter{
 		AtlasSet<GraphElement> exportSet = nodesToExport.taggedWithAny(ISUSchema.Node.LOCAL);
 		SubMonitor sm = SubMonitor.convert(mon, (int) exportSet.size());
 		
-		TreeSet<String> missingTypes = new TreeSet<String>();
+		HashSet<GraphElement> missingTypes = new HashSet<GraphElement>();
 		
 		try{
 			for(GraphElement ge : exportSet){
@@ -126,7 +129,7 @@ public class ISUExporter extends Exporter{
 				if(type != voidType) {
 					Element element = exported.get(type);
 					if (element == null) {
-						missingTypes.add(type.toString());
+						missingTypes.add(type);
 					} else {
 						e.setType(element.getId());
 					}
@@ -134,8 +137,22 @@ public class ISUExporter extends Exporter{
 				sm.worked(1);
 			}
 			
-			if (!missingTypes.isEmpty())
-				Log.warning("Missing dependencies, reference to types which were not exported:\n" + missingTypes.toString());
+			if (!missingTypes.isEmpty()) {
+				ArrayList<GraphElement> missingTypesList = new ArrayList<GraphElement>(); 
+				missingTypesList.addAll(missingTypes);
+				Collections.sort(missingTypesList, new Comparator<GraphElement>() {
+					@Override
+					public int compare(GraphElement o1, GraphElement o2) {
+						String name1 = (String) o1.getAttr(XCSG.name);
+						String name2 = (String) o2.getAttr(XCSG.name);
+						int c = String.CASE_INSENSITIVE_ORDER.compare(name1, name2);
+						if (c!=0)
+							return c;
+						return o1.address().compareTo(o2.address());
+					}
+				});
+				Log.warning("Missing dependencies, reference to types which were not exported:\n" + missingTypesList.toString());
+			}
 		}finally{
 			sm.done();
 		}
