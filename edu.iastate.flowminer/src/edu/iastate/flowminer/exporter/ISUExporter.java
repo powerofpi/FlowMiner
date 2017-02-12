@@ -3,6 +3,10 @@ package edu.iastate.flowminer.exporter;
 import static com.ensoftcorp.atlas.core.script.Common.resolve;
 import static com.ensoftcorp.atlas.core.script.Common.universe;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -93,6 +97,9 @@ public class ISUExporter extends Exporter{
 		if(mon.isCanceled()) return;
 		AtlasSet<Node> exportSet = nodesToExport.taggedWithAny(ISUSchema.Node.LOCAL);
 		SubMonitor sm = SubMonitor.convert(mon, (int) exportSet.size());
+		
+		HashSet<GraphElement> missingTypes = new HashSet<GraphElement>();
+		
 		try{
 			for(GraphElement ge : exportSet){
 				if(mon.isCanceled()) return;
@@ -121,8 +128,32 @@ public class ISUExporter extends Exporter{
 					type = elementTypeContext.edges(type, NodeDirection.OUT).getFirst().getNode(EdgeDirection.TO);
 				}
 				
-				if(type != voidType) e.setType(exported.get(type).getId());
+				if(type != voidType) {
+					Element element = exported.get(type);
+					if (element == null) {
+						missingTypes.add(type);
+					} else {
+						e.setType(element.getId());
+					}
+				}
 				sm.worked(1);
+			}
+			
+			if (!missingTypes.isEmpty()) {
+				ArrayList<GraphElement> missingTypesList = new ArrayList<GraphElement>(); 
+				missingTypesList.addAll(missingTypes);
+				Collections.sort(missingTypesList, new Comparator<GraphElement>() {
+					@Override
+					public int compare(GraphElement o1, GraphElement o2) {
+						String name1 = (String) o1.getAttr(XCSG.name);
+						String name2 = (String) o2.getAttr(XCSG.name);
+						int c = String.CASE_INSENSITIVE_ORDER.compare(name1, name2);
+						if (c!=0)
+							return c;
+						return o1.address().compareTo(o2.address());
+					}
+				});
+				Log.warning("Missing dependencies, reference to types which were not exported:\n" + missingTypesList.toString());
 			}
 		}finally{
 			sm.done();

@@ -787,6 +787,11 @@ public class AtlasExporter extends Exporter{
 							if(ancestor.taggedWith(XCSG.ArrayType)) continue;
 							NonPrimitiveTypeElement ancestorElement = (NonPrimitiveTypeElement) exported.get(ancestor);
 							
+							if (ancestorElement == null) {
+								Log.warning("Missing dependency, reference to type which was not exported: " + ancestor.toString(), new RuntimeException());
+								continue;
+							}
+							
 							if(ancestor.taggedWith(XCSG.Java.Class)){
 								te.setExtend(ancestorElement.getId());
 							}else {
