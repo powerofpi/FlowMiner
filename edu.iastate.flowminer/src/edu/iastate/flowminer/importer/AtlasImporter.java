@@ -12,6 +12,7 @@ import com.ensoftcorp.atlas.core.db.graph.Graph;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement.EdgeDirection;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement.NodeDirection;
+import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.db.set.IntersectionSet;
@@ -27,7 +28,7 @@ public class AtlasImporter extends Importer{
 	private static final String UNNAMED_RETURN = "return";
 	private static final String UNNAMED_PARAM = "p";
 		
-	private final AtlasSet<GraphElement> decRoots = new AtlasHashSet<GraphElement>(universe().edgesTaggedWithAny(XCSG.Contains).
+	private final AtlasSet<Node> decRoots = new AtlasHashSet<Node>(universe().edgesTaggedWithAny(XCSG.Contains).
 			roots().eval().nodes());
 
 	public AtlasImporter(boolean existingIndex) {
@@ -178,7 +179,7 @@ public class AtlasImporter extends Importer{
 		GraphElement parent = imported.get(parentID);
 		try{
 			match = locateExistingMethod(imported, parent, XCSG.Constructor, name, params);
-			AtlasSet<GraphElement> matchDecs = universe().edgesTaggedWithAny(XCSG.Contains).successors(toQ(toGraph(match))).eval().nodes();
+			AtlasSet<Node> matchDecs = universe().edgesTaggedWithAny(XCSG.Contains).successors(toQ(toGraph(match))).eval().nodes();
 			
 			for(GraphElement param : matchDecs.taggedWithAny(XCSG.Parameter)){
 				Integer idx = (Integer) param.getAttr(XCSG.parameterIndex);
@@ -314,7 +315,7 @@ public class AtlasImporter extends Importer{
 		GraphElement parent = imported.get(parentID);
 		try{
 			match = locateExistingMethod(imported, parent, XCSG.Method, name, params);
-			AtlasSet<GraphElement> matchDecs = universe().edgesTaggedWithAny(XCSG.Contains).successors(toQ(toGraph(match))).eval().nodes();
+			AtlasSet<Node> matchDecs = universe().edgesTaggedWithAny(XCSG.Contains).successors(toQ(toGraph(match))).eval().nodes();
 			
 			for(GraphElement param : matchDecs.taggedWithAny(XCSG.Parameter)){
 				Integer idx = (Integer) param.getAttr(XCSG.parameterIndex);
@@ -492,10 +493,10 @@ public class AtlasImporter extends Importer{
 	
 	private GraphElement locateExistingMatch(GraphElement from, String tag, String name, String attrKey, Object attrVal){
 		// Build set of candidates in the correct place in the declarative structure
-		AtlasSet<GraphElement> decCandidates;
+		AtlasSet<Node> decCandidates;
 		if(from != null){
 			AtlasSet<GraphElement> outEdges = universe().edgesTaggedWithAny(XCSG.Contains).eval().edges(from, NodeDirection.OUT);
-			decCandidates = new AtlasHashSet<GraphElement>((int) (outEdges.size() * 1.5));
+			decCandidates = new AtlasHashSet<Node>(Graph.U, (int) (outEdges.size() * 1.5));
 			for(GraphElement edge : outEdges){
 				decCandidates.add(edge.getNode(EdgeDirection.TO));
 			}

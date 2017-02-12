@@ -8,10 +8,12 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 
+import com.ensoftcorp.atlas.core.db.graph.Edge;
 import com.ensoftcorp.atlas.core.db.graph.Graph;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement.EdgeDirection;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement.NodeDirection;
+import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.notification.NotificationMap;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Attr;
@@ -33,11 +35,11 @@ public class ISUExporter extends Exporter{
 	private Graph typeofContext = resolve(null, universe().edgesTaggedWithAny(XCSG.TypeOf).eval());
 	private Graph elementTypeContext = resolve(null, universe().edgesTaggedWithAny(XCSG.ArrayElementType).eval());
 	private GraphElement voidType = universe().nodesTaggedWithAny(XCSG.Void).eval().nodes().getFirst();
-	private Map<GraphElement, Element> exported;
+	private Map<Node, Element> exported;
 	
 	@Override
 	protected void exportSummary(IProgressMonitor mon,
-			Map<GraphElement, Element> exported, IOModel model, Q toExport) {
+			Map<Node, Element> exported, IOModel model, Q toExport) {
 		// ASSERT: AtlasExporter has already exported the things it supports from toExport
 		if(mon.isCanceled()) return;
 		SubMonitor sm = SubMonitor.convert(mon, 211392);
@@ -52,8 +54,8 @@ public class ISUExporter extends Exporter{
 			if(mon.isCanceled()) return;
 			Log.info("ISUExporter enumerating graph to export");
 			Graph actualExportG = resolve(sm.newChild(167937), actualExport.eval());
-			AtlasSet<GraphElement> nodesToExport = actualExportG.nodes().taggedWithAny(ISUSchema.ISU);
-			AtlasSet<GraphElement> edgesToExport = actualExportG.edges().taggedWithAny(ISUSchema.ISU);
+			AtlasSet<Node> nodesToExport = actualExportG.nodes().taggedWithAny(ISUSchema.ISU);
+			AtlasSet<Edge> edgesToExport = actualExportG.edges().taggedWithAny(ISUSchema.ISU);
 
 			// Create DOMConvertables for nodes
 			if(mon.isCanceled()) return;
@@ -87,9 +89,9 @@ public class ISUExporter extends Exporter{
 			   choose.edgesTaggedWithAny(ISUSchema.ISU).retainEdges());
 	}
 	
-	private void convertNodesToElements(IProgressMonitor mon, AtlasSet<GraphElement> nodesToExport){
+	private void convertNodesToElements(IProgressMonitor mon, AtlasSet<Node> nodesToExport){
 		if(mon.isCanceled()) return;
-		AtlasSet<GraphElement> exportSet = nodesToExport.taggedWithAny(ISUSchema.Node.LOCAL);
+		AtlasSet<Node> exportSet = nodesToExport.taggedWithAny(ISUSchema.Node.LOCAL);
 		SubMonitor sm = SubMonitor.convert(mon, (int) exportSet.size());
 		try{
 			for(GraphElement ge : exportSet){
@@ -108,7 +110,7 @@ public class ISUExporter extends Exporter{
 					e.setName((String) ge.attr().get(XCSG.name));
 				}
 
-				exported.put(ge, e);
+				exported.put((Node) ge, e);
 				GraphElement declaringMethod = firstDeclarator(ge, XCSG.Method);
 				MethodElement me = (MethodElement) exported.get(declaringMethod);
 				me.getLocalVar().add(e);
@@ -127,9 +129,9 @@ public class ISUExporter extends Exporter{
 		}
 	}
 	
-	private void convertEdgesToRelationships(IProgressMonitor mon, IOModel model, AtlasSet<GraphElement> edgesToExport){
+	private void convertEdgesToRelationships(IProgressMonitor mon, IOModel model, AtlasSet<Edge> edgesToExport){
 		if(mon.isCanceled()) return;
-		AtlasSet<GraphElement> exportSet = edgesToExport.taggedWithAny(ISUSchema.ISU);
+		AtlasSet<Edge> exportSet = edgesToExport.taggedWithAny(ISUSchema.ISU);
 		SubMonitor sm = SubMonitor.convert(mon, (int) exportSet.size());
 		try{			
 			for(GraphElement ge : exportSet){

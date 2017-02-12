@@ -25,8 +25,10 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.ensoftcorp.atlas.core.db.graph.GraphElement;
+import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.highlight.Highlighter;
+import com.ensoftcorp.atlas.core.markup.IMarkup;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.ui.viewer.graph.SaveUtil;
@@ -107,8 +109,8 @@ public class SoundnessCompletenessTest {
 			Q keyNodeQ = toQ(toGraph(keyNode));
 			Q atlasForward = atlasFlowContext.forward(keyNodeQ);
 			Q summaryForward = summaryFlowContext.forward(keyNodeQ);
-			AtlasSet<GraphElement> atlasReached = atlasForward.intersection(keyNodes).eval().nodes();
-			AtlasSet<GraphElement> summaryReached = summaryForward.intersection(keyNodes).eval().nodes();
+			AtlasSet<Node> atlasReached = atlasForward.intersection(keyNodes).eval().nodes();
+			AtlasSet<Node> summaryReached = summaryForward.intersection(keyNodes).eval().nodes();
 			if(!atlasReached.deepEquals(summaryReached)){
 				Highlighter h = new Highlighter();
 				h.highlight(atlasForward.difference(summaryForward).intersection(keyNodes), java.awt.Color.CYAN);
@@ -117,7 +119,7 @@ public class SoundnessCompletenessTest {
 				Q problem = atlasForward.between(keyNodeQ, keyNodes).union(summaryForward.between(keyNodeQ, keyNodes));
 				problem = problem.union(u.edgesTaggedWithAny(XCSG.Contains).reverse(problem));
 				
-				SaveUtil.saveGraph(new File("/home/tdeering/" + toSummarizeFilename + "_" + System.currentTimeMillis() + ".png"), problem.eval(), h);
+				SaveUtil.saveGraph(new File("/home/tdeering/" + toSummarizeFilename + "_" + System.currentTimeMillis() + ".png"), problem.eval(), (IMarkup) h);
 				
 				fail("Different sets of key nodes are forward reachable from:\n" + keyNode);
 			}
