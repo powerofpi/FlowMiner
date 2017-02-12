@@ -44,7 +44,7 @@ public abstract class FlowMinerAction implements IWorkbenchWindowActionDelegate{
 	}
 	
 	String chooseSummaryFile(String message){
-		return chooseFile(message, "FlowMiner Summaries", ".xml-gz");
+		return chooseFile(message, "FlowMiner Summaries", ".xml.gz");
 	}
 	
 	public void selectionChanged(IAction action, ISelection selection) {}
