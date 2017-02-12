@@ -2,7 +2,7 @@
 <feature
       id="edu.iastate.flowminer"
       label="FlowMiner"
-      version="0.0.1.qualifier"
+      version="0.0.2.qualifier"
       provider-name="Iowa State University">
 
    <description url="http://powerofpi.github.io/FlowMiner/index.html">

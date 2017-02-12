@@ -30,7 +30,7 @@ public abstract class FlowMinerAction implements IWorkbenchWindowActionDelegate{
 	}
 	
 	String chooseFile(String message, String typeDescription, String typeExtension){
-	    FileDialog dialog = new FileDialog(window.getShell(), SWT.OPEN);
+	    FileDialog dialog = new FileDialog(window.getShell(), SWT.SAVE);
 	    dialog.setText(message);
 	    dialog.setFilterNames(new String[] { typeDescription, "All Files (*.*)" });
 	    dialog.setFilterExtensions(new String[] { "*"+typeExtension, "*.*" });

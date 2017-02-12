@@ -561,7 +561,10 @@ public class ISUMiner extends Miner{
 				LinkedList<SummaryEdge> toAdd = new LinkedList<SummaryEdge>();
 				
 				if(dfiThis != null){
-					if(dThis == null) throw new FlowMinerException("Unable to find signature this for:\n" + dMethod);
+					if(dThis == null) {
+						Log.warning("Missing dependencies", new FlowMinerException("Unable to find signature 'this' (the identity parameter) for:\n" + dMethod));
+						return;
+					}
 					if(isSingleton){
 						toAdd.add(new SummaryEdge(dfiThis, dThis, ISUSchema.Edge.FLOW_METHOD_RESOLVED, ISUSchema.EDGE_FLOW_METHOD_RESOLVED_TAGS));
 					} else{
@@ -570,13 +573,19 @@ public class ISUMiner extends Miner{
 				}
 				
 				if(isSingleton && voidType != typeOfContext.eval().edges(dfi, NodeDirection.OUT).getFirst().getNode(EdgeDirection.TO)){
-					if(dReturn == null) throw new FlowMinerException("Unable to find signature return for:\n" + dMethod);
+					if(dReturn == null) {
+						Log.warning("Missing dependencies", new FlowMinerException("Unable to find signature return for:\n" + dMethod));
+						return;
+					}
 					toAdd.add(new SummaryEdge(dReturn, dfi, ISUSchema.Edge.FLOW_METHOD_RESOLVED, ISUSchema.EDGE_FLOW_METHOD_RESOLVED_TAGS));
 				}
 				
 				for(GraphElement dfiParam : dfiParams){
 					GraphElement dParam = dParams.filter(XCSG.parameterIndex, dfiParam.getAttr(XCSG.parameterIndex)).getFirst();
-					if(dParam == null) throw new FlowMinerException("Unable to find signature param for:\n" + dfiParam + "\n" + dMethod);
+					if(dParam == null) {
+						Log.warning("Missing dependencies", new FlowMinerException("Unable to find signature param for:\n" + dfiParam + "\n" + dMethod));
+						return;
+					}
 					if(isSingleton){
 						toAdd.add(new SummaryEdge(dfiParam, dParam, ISUSchema.Edge.FLOW_METHOD_RESOLVED, ISUSchema.EDGE_FLOW_METHOD_RESOLVED_TAGS));
 					}else{
