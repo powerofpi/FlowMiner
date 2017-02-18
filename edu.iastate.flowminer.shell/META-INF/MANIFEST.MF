@@ -5,7 +5,7 @@ Bundle-SymbolicName: edu.iastate.flowminer.shell
 Bundle-Version: 1.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: 
- com.ensoftcorp.abp;bundle-version="3.0.14",
+ com.ensoftcorp.abp;bundle-version="3.0.13",
  com.ensoftcorp.atlas.core;bundle-version="3.0.14",
  com.ensoftcorp.atlas.java.core;bundle-version="3.0.14",
  com.ensoftcorp.atlas.ui.shell;bundle-version="3.0.14",
