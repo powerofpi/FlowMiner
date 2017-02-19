@@ -122,8 +122,9 @@ public class SoundnessCompletenessTest {
 				problem = problem.union(u.edgesTaggedWithAny(XCSG.Contains).reverse(problem));
 				
 				
+				File out = new File(System.getProperty("user.home") + File.separator + toSummarizeFilename + "_" + System.currentTimeMillis() + ".svg");
 				IMarkup markup = new MarkupFromH(h);
-				Job j = SaveUtil.saveGraph(new File("/home/tdeering/" + toSummarizeFilename + "_" + System.currentTimeMillis() + ".svg"), problem.eval(), markup);
+				Job j = SaveUtil.saveGraph(out, problem.eval(), markup);
 				j.join();
 				
 				fail("Different sets of key nodes are forward reachable from:\n" + keyNode);
