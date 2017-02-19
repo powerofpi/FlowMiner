@@ -9,8 +9,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import net.ontopia.utils.CompactHashMap;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -21,6 +19,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import com.ensoftcorp.atlas.core.db.graph.Address;
 import com.ensoftcorp.atlas.core.db.graph.Graph;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement;
+import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.notification.NotificationSet;
 import com.ensoftcorp.atlas.core.query.Attr;
 import com.ensoftcorp.atlas.core.query.Q;
@@ -32,6 +31,7 @@ import edu.iastate.flowminer.io.model.Element;
 import edu.iastate.flowminer.io.model.IOModel;
 import edu.iastate.flowminer.log.Log;
 import edu.iastate.flowminer.schema.SummarySchema;
+import net.ontopia.utils.CompactHashMap;
 
 public abstract class Exporter {
 	protected static long idGenerator = 0;
@@ -106,7 +106,7 @@ public abstract class Exporter {
 					sm.setTaskName(msg);
 					IOModel model = new IOModel(Platform.getBundle(Log.pluginid).getVersion().toString(), new Date());
 					Graph toExportG = toExport.eval();
-					Map<GraphElement, Element> exported = new CompactHashMap<GraphElement, Element>((int) (toExportG.nodes().size() + toExportG.edges().size()));
+					Map<Node, Element> exported = new CompactHashMap<Node, Element>((int) (toExportG.nodes().size() + toExportG.edges().size()));
 					atlasExporter.exportSummary(sm.newChild(124486), exported, model, toExport);
 					
 					// Export schema portion
@@ -189,7 +189,7 @@ public abstract class Exporter {
 	 * @param toExport
 	 * @param libSurface
 	 */
-	protected abstract void exportSummary(IProgressMonitor mon, Map<GraphElement, Element> exported, IOModel model, Q toExport) throws Throwable;
+	protected abstract void exportSummary(IProgressMonitor mon, Map<Node, Element> exported, IOModel model, Q toExport) throws Throwable;
 	
 	/**
 	 * Communicate what this exporter intends to export.

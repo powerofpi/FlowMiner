@@ -12,15 +12,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import net.ontopia.utils.CompactHashSet;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 
+import com.ensoftcorp.atlas.core.db.graph.Edge;
 import com.ensoftcorp.atlas.core.db.graph.Graph;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement.EdgeDirection;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement.NodeDirection;
+import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.graph.NodeGraph;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
@@ -38,6 +38,7 @@ import edu.iastate.flowminer.schema.ISUSchema;
 import edu.iastate.flowminer.utility.CRunnable;
 import edu.iastate.flowminer.utility.PrecedenceGraph;
 import edu.iastate.flowminer.utility.ThreadPool;
+import net.ontopia.utils.CompactHashSet;
 
 public class ISUMiner extends Miner{
 	private Set<SummaryEdge> summaryEdges = Collections.synchronizedSet(new CompactHashSet<SummaryEdge>());
@@ -54,7 +55,7 @@ public class ISUMiner extends Miner{
 	 */
 	private Q fields;
 	
-	private AtlasSet<GraphElement> keyNodes;
+	private AtlasSet<Node> keyNodes;
 	private GraphElement voidType; 
 	
 	@Override
@@ -179,7 +180,7 @@ public class ISUMiner extends Miner{
 				Q methodsMarkedInextensible = u.nodesTaggedWithAny(Attr.Node.IS_FINAL, XCSG.privateVisibility);
 				Q typesMarkedInextensible = u.nodesTaggedWithAny(XCSG.Java.finalClass, XCSG.ArrayType, XCSG.Java.AnonymousClass, XCSG.Java.LocalClass);
 				
-				AtlasSet<GraphElement> resolvableCallsiteSet = new AtlasHashSet<GraphElement>(staticDispatches.union(
+				AtlasSet<Node> resolvableCallsiteSet = new AtlasHashSet<Node>(staticDispatches.union(
 					invokedSignatureContext.predecessors(methodsMarkedInextensible),
 					invokedTypeContext.predecessors(typesMarkedInextensible.union(nonLibNoSubtype))).
 					nodesTaggedWithAny(XCSG.CallSite).eval().nodes());
@@ -232,7 +233,7 @@ public class ISUMiner extends Miner{
 				Q keyCallsites = callsites.difference(resolvableCallsites).union(
 						interDFContext.successors(u.nodesTaggedWithAny(XCSG.ReturnValue)).intersection(resolvableCallsites));
 				
-				keyNodes = new AtlasHashSet<GraphElement>(keyCallsites.union(
+				keyNodes = new AtlasHashSet<Node>(keyCallsites.union(
 						// Stack Items
 						passedToContext.retainEdges(),
 						// Field instance variables
@@ -330,8 +331,8 @@ public class ISUMiner extends Miner{
 	private void schemifyExistingNodes(IProgressMonitor mon, List<Future<?>> futures, final UniverseManipulator um){
 		SubMonitor sm = SubMonitor.convert(mon, 1);
 		futures.add(ThreadPool.submitRunnables(new CRunnable(sm, new Runnable(){public void run() {
-			AtlasSet<GraphElement> mKeyDF = keyNodes;
-			AtlasSet<GraphElement> resolvableCallsiteSet = resolvableCallsites.eval().nodes();
+			AtlasSet<Node> mKeyDF = keyNodes;
+			AtlasSet<Node> resolvableCallsiteSet = resolvableCallsites.eval().nodes();
 			for(GraphElement ge : mKeyDF){
 				if(!ge.tags().containsAny(XCSG.Parameter, XCSG.ReturnValue, XCSG.Identity)){
 					String sType = null;
@@ -387,7 +388,7 @@ public class ISUMiner extends Miner{
 		
 		for(final GraphElement concreteMethod : concreteMethods.eval().nodes()){
 			futures.add(ThreadPool.submitRunnables(new CRunnable(sm, new Runnable(){public void run() {
-				AtlasSet<GraphElement> cmDecs = 
+				AtlasSet<Node> cmDecs = 
 						concreteMethodDecs.intersection(containsContext.forward(toQ(toGraph(concreteMethod)))).eval().nodes();
 				
 				AtlasSet<GraphElement> mKeyNodes = new AtlasHashSet<GraphElement>(new IntersectionSet<GraphElement>(cmDecs, keyNodes));
@@ -400,7 +401,7 @@ public class ISUMiner extends Miner{
 					arrayIdx.clear();
 					
 					// Find other key nodes that this node reaches
-					AtlasSet<GraphElement> reached = localFlow(dfLocalContextG, ge, mKeyNodes, arrayRef, arrayIdx);
+					AtlasSet<Node> reached = localFlow(dfLocalContextG, ge, mKeyNodes, arrayRef, arrayIdx);
 					
 					for(GraphElement ge2 : reached){
 						toAdd.add(new SummaryEdge(ge, ge2, ISUSchema.Edge.FLOW_LOCAL, ISUSchema.EDGE_FLOW_LOCAL_TAGS, null));
@@ -429,7 +430,7 @@ public class ISUMiner extends Miner{
 	}
 	
 	private void mineArrayIndices(IProgressMonitor mon, List<Future<?>> futures, final UniverseManipulator um){
-		final AtlasSet<GraphElement> edges = arrayIndexContext.eval().edges();
+		final AtlasSet<Edge> edges = arrayIndexContext.eval().edges();
 		final SubMonitor sm = SubMonitor.convert(mon, (int) edges.size());
 		
 		futures.add(ThreadPool.submitRunnables(new CRunnable(null, new Runnable(){public void run() {
@@ -446,7 +447,7 @@ public class ISUMiner extends Miner{
 	}
 	
 	private void mineArrayIdentities(IProgressMonitor mon, List<Future<?>> futures, final UniverseManipulator um){
-		final AtlasSet<GraphElement> edges = arrayIdentityContext.eval().edges();
+		final AtlasSet<Edge> edges = arrayIdentityContext.eval().edges();
 		final SubMonitor sm = SubMonitor.convert(mon, (int) edges.size());
 		
 		futures.add(ThreadPool.submitRunnables(new CRunnable(null, new Runnable(){public void run() {
@@ -462,13 +463,13 @@ public class ISUMiner extends Miner{
 		}}))[0]);
 	}
 	
-	private AtlasSet<GraphElement> localFlow(Graph context, GraphElement origin, AtlasSet<GraphElement> keyNodes, 
+	private AtlasSet<Node> localFlow(Graph context, GraphElement origin, AtlasSet<GraphElement> keyNodes, 
 			AtlasSet<GraphElement> arrayRef, AtlasSet<GraphElement> arrayIdx){
 		int setSize = (int) (keyNodes.size() * 2);
-		AtlasSet<GraphElement> result = new AtlasHashSet<GraphElement>(setSize);
-		AtlasSet<GraphElement> reached = new AtlasHashSet<GraphElement>(setSize);
-		AtlasSet<GraphElement> newFrontier = new AtlasHashSet<GraphElement>(setSize);
-		AtlasSet<GraphElement> frontier = new AtlasHashSet<GraphElement>(setSize);
+		AtlasSet<Node> result = new AtlasHashSet<Node>(Graph.U, setSize);
+		AtlasSet<Node> reached = new AtlasHashSet<Node>(Graph.U, setSize);
+		AtlasSet<Node> newFrontier = new AtlasHashSet<Node>(Graph.U, setSize);
+		AtlasSet<Node> frontier = new AtlasHashSet<Node>(Graph.U, setSize);
 		frontier.add(origin);
 		
 		while(!frontier.isEmpty()){				
@@ -487,7 +488,7 @@ public class ISUMiner extends Miner{
 				}
 			}
 			
-			AtlasSet<GraphElement> tmp = frontier;
+			AtlasSet<Node> tmp = frontier;
 			frontier = newFrontier;
 			newFrontier = tmp;
 			newFrontier.clear();
@@ -497,7 +498,7 @@ public class ISUMiner extends Miner{
 	}
 
 	private void mineFieldFlows(final IProgressMonitor mon, List<Future<?>> futures){
-		final AtlasSet<GraphElement> fieldAccessEdges = fieldAccessContext.eval().edges();
+		final AtlasSet<Edge> fieldAccessEdges = fieldAccessContext.eval().edges();
 		final SubMonitor sm = SubMonitor.convert(mon, (int) fieldAccessEdges.size());
 		
 		futures.add(ThreadPool.submitRunnables(new CRunnable(null, new Runnable(){public void run() {
@@ -513,7 +514,7 @@ public class ISUMiner extends Miner{
 	}
 	
 	private void mineInstanceVariableAccess(final IProgressMonitor mon, List<Future<?>> futures){
-		final AtlasSet<GraphElement> instanceVariableAccessEdges = instanceVariableAccessContext.eval().edges();
+		final AtlasSet<Edge> instanceVariableAccessEdges = instanceVariableAccessContext.eval().edges();
 		final SubMonitor sm = SubMonitor.convert(mon, (int) instanceVariableAccessEdges.size());
 		
 		futures.add(ThreadPool.submitRunnables(new CRunnable(null, new Runnable(){public void run() {
@@ -529,10 +530,10 @@ public class ISUMiner extends Miner{
 	}
 	
 	private void mineMethodFlows(IProgressMonitor mon, List<Future<?>> futures, Q callsites){
-		AtlasSet<GraphElement> callsiteSet = callsites.eval().nodes();
+		AtlasSet<Node> callsiteSet = callsites.eval().nodes();
 		final SubMonitor sm = SubMonitor.convert(mon, (int) callsiteSet.size());
 		
-		final AtlasSet<GraphElement> singletonCallsiteSet = resolvableCallsites.eval().nodes();
+		final AtlasSet<Node> singletonCallsiteSet = resolvableCallsites.eval().nodes();
 		
 		// Find the features of this method's signature
 		for(final GraphElement dfi : callsiteSet){
@@ -545,15 +546,15 @@ public class ISUMiner extends Miner{
 				if(dfiThisEdge != null) dfiThis = dfiThisEdge.getNode(EdgeDirection.FROM);
 				
 				AtlasSet<GraphElement> dfiParamEdges = parameterPassedToContext.eval().edges(dfi, NodeDirection.IN);
-				AtlasSet<GraphElement> dfiParams = new AtlasHashSet<GraphElement>((int) dfiParamEdges.size());
+				AtlasSet<Node> dfiParams = new AtlasHashSet<Node>(Graph.U, (int) dfiParamEdges.size());
 				for(GraphElement dfiParamEdge : dfiParamEdges) dfiParams.add(dfiParamEdge.getNode(EdgeDirection.FROM));
 
 				// Find the features of the destination method's signature
 				GraphElement dMethod = invokedSignatureContext.eval().edges(dfi, NodeDirection.OUT).getFirst().getNode(EdgeDirection.TO);
-				AtlasSet<GraphElement> dDeclared = new AtlasHashSet<GraphElement>(containsContext.forwardStep(toQ(toGraph(dMethod))).eval().nodes());
+				AtlasSet<Node> dDeclared = new AtlasHashSet<Node>(containsContext.forwardStep(toQ(toGraph(dMethod))).eval().nodes());
 				GraphElement dReturn = dDeclared.taggedWithAny(XCSG.ReturnValue).getFirst();
 				GraphElement dThis = dDeclared.taggedWithAny(XCSG.Identity).getFirst();
-				AtlasSet<GraphElement> dParams = dDeclared.taggedWithAny(XCSG.Parameter);
+				AtlasSet<Node> dParams = dDeclared.taggedWithAny(XCSG.Parameter);
 
 				GraphElement ttsEdge = invokedTypeContext.eval().edges(dfi, NodeDirection.OUT).getFirst();
 				GraphElement dTTS = ttsEdge == null ? null:ttsEdge.getNode(EdgeDirection.TO);
