@@ -29,6 +29,7 @@ import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.highlight.Highlighter;
 import com.ensoftcorp.atlas.core.markup.IMarkup;
+import com.ensoftcorp.atlas.core.markup.MarkupFromH;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.ui.viewer.graph.SaveUtil;
@@ -119,7 +120,9 @@ public class SoundnessCompletenessTest {
 				Q problem = atlasForward.between(keyNodeQ, keyNodes).union(summaryForward.between(keyNodeQ, keyNodes));
 				problem = problem.union(u.edgesTaggedWithAny(XCSG.Contains).reverse(problem));
 				
-				SaveUtil.saveGraph(new File("/home/tdeering/" + toSummarizeFilename + "_" + System.currentTimeMillis() + ".png"), problem.eval(), (IMarkup) h);
+				
+				IMarkup markup = new MarkupFromH(h);
+				SaveUtil.saveGraph(new File("/home/tdeering/" + toSummarizeFilename + "_" + System.currentTimeMillis() + ".png"), problem.eval(), markup);
 				
 				fail("Different sets of key nodes are forward reachable from:\n" + keyNode);
 			}
