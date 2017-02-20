@@ -139,7 +139,7 @@ public class MineAndExport extends FlowMinerAction {
 					sm.setTaskName(msg);
 					Collection<IMappingSettings> indexingSettings = new ArrayList<IMappingSettings>(1);
 					indexingSettings.add(new JavaIndexingSettings(OptionIndexJars.INDEX_RELEVANT));
-					IndexingUtil.indexWithSettings(true, indexingSettings, project);
+					IndexingUtil.indexWithSettings(false, indexingSettings, project);
 					sm.worked(23828);
 					
 					/*
