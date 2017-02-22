@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -133,16 +134,16 @@ public class SoundnessCompletenessTest {
 	}
 	
 	private static String[] toSystemPaths(String[] platformURLs) throws URISyntaxException, IOException{
-		String[] res = new String[platformURLs.length];
+		List<String> res = new ArrayList<>(platformURLs.length);
 		for(int i = 0; i < platformURLs.length; ++i){
 			if(platformURLs[i].length() == 0){
-				res[i] = platformURLs[i];
+
 			}else{
 				URL url  = new URL(platformURLs[i]);
 				File f = new File(FileLocator.resolve(url).toURI());
-				res[i] = f.getAbsolutePath();
+				res.add(f.getAbsolutePath());
 			}
 		}
-		return res;
+		return res.toArray(new String[res.size()]);
 	}
 }

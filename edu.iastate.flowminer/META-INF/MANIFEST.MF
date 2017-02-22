@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.ui,
  com.opencsv;bundle-version="1.0.0",
  org.junit,
  com.ensoftcorp.atlas.ui;bundle-version="2.1.9"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: edu.iastate.flowminer,
  edu.iastate.flowminer.actions,

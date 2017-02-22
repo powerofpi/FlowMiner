@@ -1,8 +1,10 @@
 package edu.iastate.flowminer.actions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import net.ontopia.utils.CompactHashMap;
 
@@ -84,6 +86,11 @@ public class MineAndExport extends FlowMinerAction {
 					String msg = "Creating temporary Eclipse project with selected JARs";
 					Log.info(msg);
 					sm.setTaskName(msg);
+					
+					String summarizing = Arrays.asList(toSummarize).stream().collect(Collectors.joining("; "));
+					String deps = Arrays.asList(dependencies).stream().collect(Collectors.joining("; "));
+					Log.info("\nSummarizing: " + summarizing + "\nDependencies: " + deps + "\nVM: " + vm.getName());
+					
 					project.create(null);
 					project.open(null);
 					IProjectDescription description = project.getDescription();
@@ -139,7 +146,7 @@ public class MineAndExport extends FlowMinerAction {
 					sm.setTaskName(msg);
 					Collection<IMappingSettings> indexingSettings = new ArrayList<IMappingSettings>(1);
 					indexingSettings.add(new JavaIndexingSettings(OptionIndexJars.INDEX_RELEVANT));
-					IndexingUtil.indexWithSettings(true, indexingSettings, project);
+					IndexingUtil.indexWithSettings(false, indexingSettings, project);
 					sm.worked(23828);
 					
 					/*
@@ -183,6 +190,12 @@ public class MineAndExport extends FlowMinerAction {
 		if(block){
 			try {
 				job.join();
+				
+				// propagate errors up
+				IStatus result = job.getResult();
+				if (result.getSeverity() != IStatus.OK)
+					throw new RuntimeException(result.getException());
+				
 			} catch (InterruptedException e) {}
 		}
 	}
