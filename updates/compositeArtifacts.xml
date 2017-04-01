@@ -7,6 +7,6 @@
   </properties>
   <children size='2'>
     <child location='flowminer'/>
-    <child location='http://ensoftupdate.com/atlas/internal/current'/>
+    <child location='http://download.ensoftcorp.com/atlas/eclipse'/>
   </children>
 </repository>
