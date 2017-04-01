@@ -12,10 +12,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.junit.After;
 import org.junit.Before;
@@ -29,6 +31,7 @@ import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.highlight.Highlighter;
 import com.ensoftcorp.atlas.core.markup.IMarkup;
+import com.ensoftcorp.atlas.core.markup.MarkupFromH;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.ui.viewer.graph.SaveUtil;
@@ -89,7 +92,7 @@ public class SoundnessCompletenessTest {
 	}
 	
 	@Test
-	public void testEquivalentFlows() {
+	public void testEquivalentFlows() throws InterruptedException {
 		Q u = universe();	
 		Q ipdf = u.edgesTaggedWithAny(XCSG.InterproceduralDataFlow);
 		Q atlasFlowContext = resolve(null, u.edgesTaggedWithAny(XCSG.DataFlow_Edge).differenceEdges(
@@ -119,7 +122,11 @@ public class SoundnessCompletenessTest {
 				Q problem = atlasForward.between(keyNodeQ, keyNodes).union(summaryForward.between(keyNodeQ, keyNodes));
 				problem = problem.union(u.edgesTaggedWithAny(XCSG.Contains).reverse(problem));
 				
-				SaveUtil.saveGraph(new File("/home/tdeering/" + toSummarizeFilename + "_" + System.currentTimeMillis() + ".png"), problem.eval(), (IMarkup) h);
+				
+				File out = new File(System.getProperty("user.home") + File.separator + toSummarizeFilename + "_" + System.currentTimeMillis() + ".svg");
+				IMarkup markup = new MarkupFromH(h);
+				Job j = SaveUtil.saveGraph(out, problem.eval(), markup);
+				j.join();
 				
 				fail("Different sets of key nodes are forward reachable from:\n" + keyNode);
 			}
@@ -127,16 +134,16 @@ public class SoundnessCompletenessTest {
 	}
 	
 	private static String[] toSystemPaths(String[] platformURLs) throws URISyntaxException, IOException{
-		String[] res = new String[platformURLs.length];
+		List<String> res = new ArrayList<>(platformURLs.length);
 		for(int i = 0; i < platformURLs.length; ++i){
 			if(platformURLs[i].length() == 0){
-				res[i] = platformURLs[i];
+
 			}else{
 				URL url  = new URL(platformURLs[i]);
 				File f = new File(FileLocator.resolve(url).toURI());
-				res[i] = f.getAbsolutePath();
+				res.add(f.getAbsolutePath());
 			}
 		}
-		return res;
+		return res.toArray(new String[res.size()]);
 	}
 }
